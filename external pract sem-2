@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks and Grade Calculator</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            width: 450px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #444;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #5563d6;
+        }
+
+        #marksContainer div {
+            margin-bottom: 10px;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f4f6ff;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            line-height: 1.8;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .pass {
+            color: green;
+            font-weight: bold;
+        }
+
+        .fail {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🎓 Student Marks & Grade Calculator</h2>
+
+        <label>Enter Number of Subjects:</label>
+        <input type="number" id="subjectCount" min="1" placeholder="e.g. 5">
+
+        <button onclick="generateInputs()">Create Fields</button>
+
+        <div id="marksContainer"></div>
+
+        <button onclick="calculateResult()">Calculate Result</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function generateInputs() {
+            let count = document.getElementById("subjectCount").value;
+            let container = document.getElementById("marksContainer");
+
+            container.innerHTML = "";
+
+            if (count <= 0 || count === "") {
+                alert("Please enter a valid number of subjects.");
+                return;
+            }
+
+            for (let i = 1; i <= count; i++) {
+                container.innerHTML += `
+                    <div>
+                        <label>Subject ${i} Marks:</label>
+                        <input type="number" id="mark${i}" min="0" max="100" placeholder="Enter marks">
+                    </div>
+                `;
+            }
+        }
+
+        function calculateResult() {
+            let count = Number(document.getElementById("subjectCount").value);
+
+            if (count <= 0) {
+                alert("Please enter the number of subjects first.");
+                return;
+            }
+
+            let total = 0;
+            let pass = true;
+
+            for (let i = 1; i <= count; i++) {
+                let mark = Number(document.getElementById(`mark${i}`).value);
+
+                if (isNaN(mark) || mark < 0 || mark > 100) {
+                    alert(`Please enter valid marks for Subject ${i} (0-100).`);
+                    return;
+                }
+
+                total += mark;
+
+                if (mark < 40) {
+                    pass = false;
+                }
+            }
+
+            let average = total / count;
+            let grade;
+
+            if (average >= 90) {
+                grade = "A+";
+            } else if (average >= 80) {
+                grade = "A";
+            } else if (average >= 70) {
+                grade = "B";
+            } else if (average >= 60) {
+                grade = "C";
+            } else if (average >= 50) {
+                grade = "D";
+            } else {
+                grade = "F";
+            }
+
+            document.getElementById("result").innerHTML = `
+                <h3>Result</h3>
+                <p><strong>Total Marks:</strong> ${total}</p>
+                <p><strong>Average Marks:</strong> ${average.toFixed(2)}</p>
+                <p><strong>Grade:</strong> ${grade}</p>
+                <p><strong>Status:</strong> 
+                    <span class="${pass ? 'pass' : 'fail'}">
+                        ${pass ? 'PASS ✅' : 'FAIL ❌'}
+                    </span>
+                </p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
